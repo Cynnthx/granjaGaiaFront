@@ -1,0 +1,97 @@
+<div class="min-h-screen" style="background-color: #938EBA;">
+  <!-- Header -->
+  <header style="background-color: #73487A;" class="shadow-sm">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-white">Granja Gaia</h1>
+      <nav class="flex space-x-6">
+        <a href='/login' class="text-white hover:text-gray-200 font-medium">Login</a>
+        <a href="/events" class="text-white hover:text-gray-200 font-medium">Eventos</a>
+        <a href="#" class="text-white hover:text-gray-200 font-medium">Tienda</a>
+        <a href="/contact" class="text-white hover:text-gray-200 font-medium">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="background-color: #B7A3DE;" class="text-white py-1">
+    <div class="container mx-auto px-4 text-center">
+      <img src="/logo-removebg-preview.png" alt="Logo Granja Gaia" class="mx-auto mb-6 h-24 w-auto">
+
+      <h2 class="text-3xl md:text-4xl font-bold mb-6" style="color: #FFFFFF;">
+        🌱🐓 Granja Gaia, naturaleza que nutre, vida que florece. 🍃🥕✨
+      </h2>
+      <p class="max-w-3xl mx-auto text-lg">En Granja Escuela Gaia, la naturaleza es el mejor aula.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- About Section -->
+    <section class="mb-12">
+      <section class="mb-12 grid gap-6 md:grid-cols-3">
+        <!-- Tarjeta 1 -->
+        <div class="bg-[#B1C4DD] rounded-lg shadow-md p-6">
+          <img src="granja.jpg" alt="Granja Escuela Gaia" class="w-full h-48 object-cover rounded-t-lg mb-4">
+          <p class="text-gray-700">❤️🐴🌞En Granja Escuela Gaia, la naturaleza es el mejor aula. Ofrecemos una experiencia educativa única donde niños y adultos aprenden sobre el respeto a los animales, el cultivo sostenible y la vida en el campo. A través de eventos, fomentamos el amor por la tierra y el conocimiento de los ciclos naturales. 🌿📚✨</p>
+        </div>
+
+        <!-- Tarjeta 2 -->
+        <div class="bg-[#B1C4DD] rounded-lg shadow-md p-6">
+          <img src="animales.jpg" alt="Entorno de la granja" class="w-full h-48 object-cover rounded-t-lg mb-4">
+          <p class="text-gray-700">🌿✨ En Granja Gaia, disfrutamos de un entorno libre y saludable. Apostamos por prácticas responsables, donde el bienestar animal es la base de nuestra esencia. Criamos con amor, cultivamos con conciencia y ofrecemos productos auténticos, porque la calidad nace del respeto. 🐓🏡</p>
+        </div>
+
+        <!-- Tarjeta 3 -->
+        <div class="bg-[#B1C4DD] rounded-lg shadow-md p-6">
+          <img src="huerto.jpg" alt="Huerto sostenible" class="w-full h-48 object-cover rounded-t-lg mb-4">
+          <p class="text-gray-700">🌾✨Nuestro huerto es el corazón de todo lo que hacemos. Cultivamos con respeto por la tierra, utilizando prácticas sostenibles que preservan la biodiversidad y promueven un crecimiento natural. Cada cosecha es fruto de nuestro esfuerzo y dedicación, garantizando productos frescos, llenos de sabor y nutrientes. La calidad es una forma de vida. 🌱🍅</p>
+        </div>
+      </section>
+    </section>
+
+
+<!--    &lt;!&ndash; Carrusel de Eventos &ndash;&gt;-->
+<!--    <h2 class="text-2xl font-bold mb-4 text-white">Próximos Eventos</h2>-->
+<!--    <div class="carousel-wrapper relative mb-8">-->
+<!--      <button-->
+<!--        (click)="scrollEventsLeft()"-->
+<!--        class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100"-->
+<!--      >-->
+<!--        &#9664;-->
+<!--      </button>-->
+
+<!--      <div #eventsCarousel class="carousel-container flex overflow-x-auto scroll-smooth space-x-4 py-4 px-8">-->
+<!--        <div *ngFor="let event of events" class="card flex-none w-64 bg-white rounded-lg shadow-md overflow-hidden">-->
+<!--          <img-->
+<!--            [src]="getEventImage(event.type)"-->
+<!--            [alt]="event.title"-->
+<!--            class="w-full h-48 object-cover"-->
+<!--          >-->
+<!--          <div class="p-4">-->
+<!--            <h3 class="font-bold text-lg mb-2">{{ event.title }}</h3>-->
+<!--            <p class="text-gray-600 mb-3">{{ event.description }}</p>-->
+<!--            <p class="text-sm"><strong>Fecha:</strong> {{ event.date }}</p>-->
+<!--            <p *ngIf="event.rating" class="text-sm mt-2">-->
+<!--              <strong>Rating:</strong> {{ getStars(event.rating) }} ({{ event.reviews }} reseñas)-->
+<!--            </p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <button-->
+<!--        (click)="scrollEventsRight()"-->
+<!--        class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100"-->
+<!--      >-->
+<!--        &#9654;-->
+<!--      </button>-->
+<!--    </div>-->
+  </main>
+
+
+    <!-- Footer -->
+  <footer style="background-color: #73487A;" class="text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2023 Granja Escuela Gaia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+</div>

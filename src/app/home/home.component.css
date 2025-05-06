@@ -1,0 +1,79 @@
+/* Estilos para el carrusel */
+.carousel-wrapper {
+  position: relative;
+  margin: 2rem 0;
+  padding: 0 40px;
+}
+
+.carousel-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  gap: 20px;
+  padding: 20px 0;
+  margin: 0 -20px;
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none; /* Oculta la barra de scroll */
+}
+
+.card {
+  flex: 0 0 300px;
+  scroll-snap-align: start;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin: 0 10px;
+}
+
+.carousel-wrapper button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #73487A;
+}
+
+.carousel-wrapper button:first-child {
+  left: 0;
+}
+
+.carousel-wrapper button:last-child {
+  right: 0;
+}
+
+/* Estilos para las imágenes */
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+/* Estilos para los títulos */
+h2 {
+  color: #73487A;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card h3 {
+  color: #73487A;
+  margin-bottom: 10px;
+}
