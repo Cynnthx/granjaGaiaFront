@@ -1,0 +1,74 @@
+<div class="min-h-screen" style="background-color: #938EBA;">
+  <!-- Header -->
+  <header style="background-color: #73487A;" class="shadow-sm">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-white">Granja Gaia</h1>
+      <nav class="flex space-x-6">
+        <a href="#" class="text-white hover:text-gray-200 font-medium">Tienda</a>
+        <a href="/contact" class="text-white hover:text-gray-200 font-medium">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="background-color: #B7A3DE;" class="text-white py-1">
+    <div class="container mx-auto px-4 text-center">
+      <img src="/logo-removebg-preview.png" alt="Logo Granja Gaia" class="mx-auto mb-6 h-24 w-auto">
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="min-h-screen" style="background-color: #B1C4DD;">
+      <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-12" style="color: #73487A; font-family: 'Mooli', sans-serif;">
+          Eventos en nuestra Granja Escuela
+        </h1>
+
+        <!-- Estado de carga -->
+        <div *ngIf="loading" class="text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-700"></div>
+          <p class="mt-4 text-gray-700">Cargando eventos...</p>
+        </div>
+
+        <!-- Estado de error -->
+        <div *ngIf="error && !loading"
+             class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center"
+             role="alert">
+          <strong class="font-bold">Error!</strong>
+          <span class="block sm:inline">{{ error || 'No se pudieron cargar los eventos. Inténtalo de nuevo más tarde.' }}</span>
+        </div>
+
+        <!-- Mostrar eventos -->
+        <div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          <!-- Tarjeta - Usando *ngFor -->
+          <div *ngFor="let evento of eventos" class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
+            <div class="p-6 flex flex-col flex-grow">
+              <img [src]="evento.imagen || '/default-image.jpg'" class="mb-4 w-full h-48 object-cover">
+              <h2 class="text-2xl font-bold mb-2 text-gray-800">{{ evento.nombre }}</h2>
+              <p class="text-gray-600 mb-4">{{ evento.descripcion }}</p>
+              <div class="flex justify-between items-center mb-4 mt-auto">
+                <span class="text-gray-700 font-medium">{{ evento.fecha }}</span>
+                <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+                  {{ evento.capacidad }} plazas
+                </span>
+              </div>
+              <p class="text-xl font-bold text-gray-800 mb-4">{{ evento.precio.toFixed(2) }} €</p>
+              <button (click)="irAInscripcion(evento.id!)"
+                      class="w-full py-2 px-4 rounded-lg font-semibold text-white hover:opacity-90 transition mt-auto"
+                      style="background-color: #73487A;">
+                Ir al evento
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background-color: #73487A;" class="text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2023 Granja Escuela Gaia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</div>
