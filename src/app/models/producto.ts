@@ -1,43 +1,44 @@
 export interface Producto {
-  id?: number;                   // Opcional para nuevos productos
+  id: number;
   nombre: string;
   descripcion: string;
   precio: number;
   imagenUrl: string;
-  especificaciones?: Record<string, any>; // Objeto JSON dinámico
   stock: number;
-  fechaCreacion?: Date;           // Opcional (se puede generar en frontend)
-  esPopular?: boolean;            // Opcional (valor por defecto false)
-  categoriaId: number;            // ID de la categoría (en lugar del objeto completo)
+  esPopular: boolean;
+  idCategoria: number;
+  nombreCategoria: string;
+  especificaciones?: Record<string, any>;
+  fechaCreacion?: Date;
 }
 
-// Versión extendida con métodos útiles
 export class ProductoModel implements Producto {
-  id?: number;
+  id: number;
   nombre: string;
   descripcion: string;
   precio: number;
   imagenUrl: string;
-  especificaciones: Record<string, any>;
   stock: number;
-  fechaCreacion: Date;
   esPopular: boolean;
-  categoriaId: number;
+  idCategoria: number;
+  nombreCategoria: string;
+  especificaciones: Record<string, any>;
+  fechaCreacion: Date;
 
   constructor(data: Partial<Producto> = {}) {
-    this.id = data.id;
+    this.id = data.id || 0;
     this.nombre = data.nombre || '';
     this.descripcion = data.descripcion || '';
     this.precio = data.precio || 0;
-    this.imagenUrl = data.imagenUrl || '';
-    this.especificaciones = this.parseEspecificaciones(data.especificaciones);
+    this.imagenUrl = data.imagenUrl || '/assets/default-product.jpg';
     this.stock = data.stock || 0;
-    this.fechaCreacion = data.fechaCreacion || new Date();
     this.esPopular = data.esPopular || false;
-    this.categoriaId = data.categoriaId || 0;
+    this.idCategoria = data.idCategoria || 0;
+    this.nombreCategoria = data.nombreCategoria || '';
+    this.especificaciones = this.parseEspecificaciones(data.especificaciones);
+    this.fechaCreacion = data.fechaCreacion ? new Date(data.fechaCreacion) : new Date();
   }
 
-  // Convierte especificaciones a objeto
   private parseEspecificaciones(especs?: string | Record<string, any>): Record<string, any> {
     if (!especs) return {};
     if (typeof especs === 'string') {
@@ -50,26 +51,21 @@ export class ProductoModel implements Producto {
     return especs;
   }
 
-  // Validación básica del producto
-  esValido(): boolean {
-    return this.nombre.length > 0 &&
-      this.descripcion.length > 0 &&
-      this.precio > 0 &&
-      this.imagenUrl.length > 0 &&
-      this.stock >= 0 &&
-      this.categoriaId > 0;
-  }
 
-  // Formatea el precio (ej: $1,000.00)
   get precioFormateado(): string {
-    return new Intl.NumberFormat('es-MX', {
+    return new Intl.NumberFormat('es-ES', {
       style: 'currency',
-      currency: 'MXN'
+      currency: 'EUR'
     }).format(this.precio);
   }
 
-  // Verifica si está disponible (stock > 0)
   get disponible(): boolean {
     return this.stock > 0;
+  }
+
+  get esNuevo(): boolean {
+    const fechaCreacion = this.fechaCreacion ? new Date(this.fechaCreacion) : new Date();
+    const diferenciaDias = (new Date().getTime() - fechaCreacion.getTime()) / (1000 * 3600 * 24);
+    return diferenciaDias < 30; // Considerar nuevo si tiene menos de 30 días
   }
 }
