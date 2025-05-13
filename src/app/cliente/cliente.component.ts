@@ -35,11 +35,11 @@ export class ClienteComponent implements OnInit {
         this.cliente = data;
         this.loading = false;
       },
-      error: (err) => {
-        const errorMsg = this.errorHandler.handleError(err);
-        this.error = typeof errorMsg === 'string' ? errorMsg : 'Ocurrió un error';
-        this.loading = false;
-      }
+      // error: (err) => {
+      //   const errorMsg = this.errorHandler.handleError(err);
+      //   this.error = typeof errorMsg === 'string' ? errorMsg : 'Ocurrió un error';
+      //   this.loading = false;
+      // }
     });
   }
 

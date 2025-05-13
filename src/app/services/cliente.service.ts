@@ -19,8 +19,11 @@ export class ClienteService {
 
   // Obtener perfil del cliente
   getMiPerfil(): Observable<any> {
-    const clienteId = this.authService.getCurrentUser()?.id;
-    return this.http.get<any>(`${this.apiUrl}/${clienteId}`, {
+
+    const clienteId = localStorage.getItem('usuarioId');
+
+
+    return this.http.get<any>(`${this.apiUrl}/usuario/${clienteId}`, {
       headers: this.authService.getAuthHeaders()
     }).pipe(catchError(this.errorHandler.handleError));
   }
