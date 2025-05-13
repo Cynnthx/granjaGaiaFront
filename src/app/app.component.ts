@@ -5,12 +5,14 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ContactoComponent } from './contacto/contacto.component';
 import { EventoComponent } from './evento/evento.component';
 import {InscripcionComponent} from './inscripcion/inscripcion.component';
 import {ClienteComponent} from './cliente/cliente.component';
 import {EventoAdminComponent} from './evento-admin/evento-admin.component';
+import {CategoriaComponent} from './categoria/categoria.component';
+import {TiendaComponent} from './tienda/tienda.component';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +21,10 @@ import {EventoAdminComponent} from './evento-admin/evento-admin.component';
     RouterOutlet,
     // HomeComponent,
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
+    // CategoriaComponent,
+    // TiendaComponent,
     // LoginComponent,
     // RegisterComponent,
     // ContactoComponent,
