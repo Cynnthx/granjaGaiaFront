@@ -50,6 +50,6 @@ export class EventoComponent implements OnInit {
 
 
   irAInscripcion(eventoId: number): void {
-    this.router.navigate(['/inscripcion', eventoId]);
+    this.router.navigate(['/cliente', eventoId]);
   }
 }
