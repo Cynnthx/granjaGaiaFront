@@ -29,15 +29,17 @@
       <!-- Filtros -->
       <div class="mb-8 p-6 rounded-lg shadow-md bg-indigo-200">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- Filtro de Categoría (ajustado para usar las categorías cargadas) -->
           <div class="w-full md:w-1/3">
             <label for="categoria" class="block text-sm font-medium text-purple-900">Categoría</label>
             <select id="categoria" [(ngModel)]="filtro.idCategoria" (change)="filtrarProductos()"
                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 rounded-md transition duration-300">
-              <option value="">Todas las categorías</option>
+              <option [value]="undefined">Todas las categorías</option>
               <option *ngFor="let cat of categorias" [value]="cat.id">{{cat.nombre}}</option>
             </select>
           </div>
 
+          <!-- Filtro de Rango de Precios -->
           <div class="w-full md:w-1/3">
             <label class="block text-sm font-medium text-purple-900">Rango de precios</label>
             <div class="flex items-center space-x-4 mt-1">
@@ -49,6 +51,7 @@
             </div>
           </div>
 
+          <!-- Botones de Filtro -->
           <div class="flex items-center space-x-4">
             <button (click)="filtrarProductos()"
                     class="px-4 py-2 rounded-md font-medium text-white bg-purple-900 hover:bg-purple-700 transition duration-300 transform hover:scale-105">
@@ -61,25 +64,7 @@
           </div>
         </div>
 
-        <div class="mt-4 flex flex-wrap items-center gap-4">
-          <label class="inline-flex items-center">
-            <input type="checkbox" [(ngModel)]="filtro.soloPopulares" (change)="filtrarProductos()"
-                   class="rounded text-purple-600 focus:ring-purple-500 transition duration-300">
-            <span class="ml-2 text-sm text-purple-900">Solo productos populares</span>
-          </label>
-
-          <div class="ml-auto">
-            <label for="orden" class="text-sm mr-2 text-purple-900">Ordenar por:</label>
-            <select id="orden" [(ngModel)]="filtro.orden" (change)="filtrarProductos()"
-                    class="pl-3 pr-10 py-1 text-sm border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-purple-600 rounded-md transition duration-300">
-              <option value="novedades">Novedades</option>
-              <option value="precio_asc">Precio: menor a mayor</option>
-              <option value="precio_desc">Precio: mayor a menor</option>
-              <option value="popularidad">Popularidad</option>
-            </select>
-          </div>
-        </div>
-      </div>
+    </div>
 
       <!-- Listado de Productos -->
       <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

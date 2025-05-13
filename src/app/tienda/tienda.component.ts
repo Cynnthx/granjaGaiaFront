@@ -1,8 +1,11 @@
+// src/app/tienda/tienda.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CategoriaService, Categoria } from '../services/categoria.service';
 
 // Interfaz para los productos
 interface ProductoDTO {
@@ -35,8 +38,7 @@ interface FiltroProductoDTO {
 })
 export class TiendaComponent implements OnInit {
   productos: ProductoDTO[] = [];
-  productosPopulares: ProductoDTO[] = [];
-  categorias: { id: number; nombre: string }[] = [];
+  categorias: Categoria[] = [];
   loading = false;
   error: string | null = null;
 
@@ -46,37 +48,43 @@ export class TiendaComponent implements OnInit {
 
   private apiUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private categoriaService: CategoriaService // Inyectamos el servicio
+  ) {}
 
   ngOnInit(): void {
     this.cargarCategorias();
-    this.cargarProductosPopulares();
-    this.filtrarProductos();  // Cargar los productos inicialmente
+    this.filtrarProductos();
   }
 
   cargarCategorias(): void {
-    this.http.get<{ id: number; nombre: string }[]>(`${this.apiUrl}/categorias`)
-      .subscribe({
-        next: (categorias) => this.categorias = categorias,
-        error: (err) => this.error = 'Error al cargar categorías'
-      });
-  }
-
-  cargarProductosPopulares(): void {
-    this.http.get<ProductoDTO[]>(`${this.apiUrl}/productos/populares`)
-      .subscribe({
-        next: (productos) => this.productosPopulares = productos,
-        error: (err) => this.error = 'Error al cargar productos populares'
-      });
+    this.categoriaService.getCategorias().subscribe({
+      next: (categorias: Categoria[]) => {
+        this.categorias = categorias;
+        console.log("Categorías cargadas:", categorias);
+      },
+      error: (err) => {
+        this.error = 'Error al cargar categorías';
+        console.error(err);
+      }
+    });
   }
 
   filtrarProductos(): void {
     this.loading = true;
     this.error = null;
 
-    const params: any = { ...this.filtro };
+    const params: any = {
+      ...this.filtro,
+      idCategoria: this.filtro.idCategoria !== undefined ? +this.filtro.idCategoria : undefined,
+      precioMin: this.filtro.precioMin !== undefined ? +this.filtro.precioMin : undefined,
+      precioMax: this.filtro.precioMax !== undefined ? +this.filtro.precioMax : undefined,
+      soloPopulares: this.filtro.soloPopulares ? true : undefined
+    };
 
-    // Asegúrate de solo enviar los filtros que no son undefined
+    // Elimina parámetros undefined para evitar errores en el backend
     Object.keys(params).forEach(key => params[key] === undefined && delete params[key]);
 
     this.http.get<ProductoDTO[]>(`${this.apiUrl}/productos/listar`, { params })
@@ -87,6 +95,7 @@ export class TiendaComponent implements OnInit {
         },
         error: (err) => {
           this.error = 'Error al cargar los productos';
+          console.error(err);
           this.loading = false;
         }
       });
@@ -94,7 +103,7 @@ export class TiendaComponent implements OnInit {
 
   limpiarFiltros(): void {
     this.filtro = { orden: 'novedades' };
-    this.filtrarProductos();  // Refiltrar con los filtros limpios
+    this.filtrarProductos();
   }
 
   verDetalle(id: number): void {
