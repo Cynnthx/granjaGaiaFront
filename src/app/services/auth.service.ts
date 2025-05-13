@@ -1,66 +1,54 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { ErrorHandlerService } from './error-handler.service';
-import { ActualizarHeaderService } from './actualizar-header.service';
+import { jwtDecode } from 'jwt-decode';
+
+interface LoginResponse {
+  token: string;
+  rol: string;
+  usuarioId:number;
+}
+
+
+interface CustomJwtPayload {
+  userId: string;
+  rol: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/usuarios';
+  private readonly userKey = 'auth_user';
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private errorHandler: ErrorHandlerService,
-    private actualizarHeader: ActualizarHeaderService
-  ) {}
+  constructor(private http: HttpClient) {}
 
-  login(email: string, contrasena: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, contrasena })
-      .pipe(
-        tap(response => {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.usuario));
-          this.actualizarHeader.triggerRefreshHeader();
-
-          console.log('Token recibido:', response.token);
-        }),
-        catchError(this.errorHandler.handleError)
-      );
+  login(email: string, contrasena: string): Observable<LoginResponse> {
+    const body = { email, contrasena };
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, body);
   }
 
   register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/registro/cliente`, userData)
-      .pipe(catchError(this.errorHandler.handleError));
+    return this.http.post(`${this.apiUrl}/register`, userData);
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('token');
+  getRole(): string | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode<CustomJwtPayload>(token);
+        return decodedToken.rol;
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+      }
+    }
+    return null;
   }
 
   getCurrentUser(): any {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem(this.userKey);
     return user ? JSON.parse(user) : null;
-  }
-
-  logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.router.navigate(['/']);
-    Swal.fire({
-      title: 'Sesión cerrada',
-      text: 'Has salido de tu cuenta correctamente',
-      icon: 'success',
-      confirmButtonText: 'OK',
-      background: '#F9F4E3',
-      color: '#7A6448'
-    });
-    this.actualizarHeader.triggerRefreshHeader();
   }
 
   getAuthHeaders(): HttpHeaders {
@@ -68,5 +56,14 @@ export class AuthService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.getToken()}`
     });
+  }
+
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
   }
 }
