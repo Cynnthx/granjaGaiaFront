@@ -1,0 +1,56 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* Animaciones */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Transiciones */
+.transition {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Hover effects */
+.hover\:bg-gray-50:hover {
+  background-color: #f9fafb;
+}
+
+.hover\:bg-purple-700:hover {
+  background-color: #6b46c1;
+}
+
+.hover\:bg-green-700:hover {
+  background-color: #047857;
+}
+
+.hover\:bg-gray-300:hover {
+  background-color: #d1d5db;
+}
+
+/* Focus rings */
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5);
+}
+
+.focus\:ring-purple-600:focus {
+  --tw-ring-color: rgba(124, 58, 237, 0.5);
+}
