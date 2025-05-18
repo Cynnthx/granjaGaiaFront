@@ -4,6 +4,8 @@ import { Evento } from '../models/evento';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-evento-admin',
@@ -18,6 +20,9 @@ export class EventoAdminComponent implements OnInit {
 
   modoFormulario = false;
   eventoEditando: Evento | null = null;
+
+  errorMessage: string | null = null;
+  isLoading = false;
 
   // Inicializamos con valores por defecto válidos
   nuevoEvento: Evento = this.getEventoVacio();
@@ -45,6 +50,54 @@ export class EventoAdminComponent implements OnInit {
     });
   }
 
+
+  crearEvento(): void {
+    // Validación básica
+    if (!this.nuevoEvento.nombre || !this.nuevoEvento.descripcion ||
+      !this.nuevoEvento.fecha || !this.nuevoEvento.imagen) {
+      this.errorMessage = 'Por favor completa todos los campos requeridos';
+      return;
+    }
+
+    const capacidad = Number(this.nuevoEvento.capacidad);
+    const precio = Number(this.nuevoEvento.precio);
+
+    if (isNaN(capacidad) || capacidad <= 0) {
+      this.errorMessage = 'La capacidad debe ser un número positivo';
+      return;
+    }
+
+    if (isNaN(precio) || precio < 0) {
+      this.errorMessage = 'El precio debe ser un número positivo o cero';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    const datosEvento = {
+      nombre: this.nuevoEvento.nombre.trim(),
+      descripcion: this.nuevoEvento.descripcion.trim(),
+      fecha: this.nuevoEvento.fecha,
+      capacidad: capacidad,
+      precio: precio,
+      imagen: this.nuevoEvento.imagen.trim()
+    };
+
+    this.eventoService.crearEvento(datosEvento).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.router.navigate(['/admin/eventos']);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isLoading = false;
+        this.errorMessage = error.message || 'Error al crear el evento';
+      }
+    });
+  }
+
+
+
   abrirFormulario(evento?: Evento): void {
     this.modoFormulario = true;
     this.eventoEditando = evento || null;
@@ -69,6 +122,7 @@ export class EventoAdminComponent implements OnInit {
       });
     } else {
       // Crear nuevo evento
+      this.nuevoEvento.id = undefined;
       this.eventoService.crearEvento(this.nuevoEvento).subscribe({
         next: () => {
           this.cargarEventos();
