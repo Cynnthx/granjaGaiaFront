@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import {CommonModule} from '@angular/common';
+import {PedidoService} from '../services/pedido.service';
+import {lastValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private pedidoService: PedidoService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(4)]]
@@ -27,8 +29,7 @@ export class LoginComponent {
 
       this.authService.login(email, contrasena).subscribe({
 
-        next: (response) => {
-
+        next: async (response) => {
 
           console.log("Respuesta:", response);
           localStorage.setItem('token', response.token);
@@ -36,9 +37,18 @@ export class LoginComponent {
           // Guardar el usuario en localStorage
           localStorage.setItem('usuarioId', String(response.usuarioId));
 
+          // Guardar el clienteId en localStorage
+          localStorage.setItem('clienteId', String(response.clienteId));
+
           const role = response.rol;
           console.log("Rol del usuario:", role);
 
+          if(response.clienteId != null){
+
+            // Crear un nuevo pedido
+            const pedidoCreado = await lastValueFrom(this.pedidoService.crearPedido(response.clienteId));
+            localStorage.setItem('pedidoId', String(pedidoCreado.id));
+          }
 
 
           if (role === 'admin') {
