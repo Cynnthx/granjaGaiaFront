@@ -20,7 +20,7 @@ export class CategoriaService {
 
   // Metodo para obtener todas las categorías
   getCategorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(this.apiUrl);
+    return this.http.get<Categoria[]>(`${this.apiUrl}/listar`) ;
   }
 
   // Metodo para crear una nueva categoría

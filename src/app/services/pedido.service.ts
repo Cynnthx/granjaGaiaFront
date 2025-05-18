@@ -5,6 +5,16 @@ import { catchError } from 'rxjs/operators';
 import { ErrorHandlerService } from './error-handler.service';
 import { AuthService } from './auth.service';
 
+// Interfaz para definir la estructura de Pedido
+export interface PedidoDTO {
+  id: number | null;
+  fecha: string;
+  estado: string;
+  total: number;
+  usuarioId: number;
+  nombreUsuario: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,15 +28,15 @@ export class PedidoService {
   ) {}
 
   // Crea un nuevo pedido
-  crearPedido(pedido: any): Observable<any> {
-    return this.http.post(this.apiUrl, pedido, {
+  crearPedido(clienteId: number): Observable<PedidoDTO> {
+    return this.http.post<PedidoDTO>(`${this.apiUrl}/cliente/${clienteId}`, {}, {
       headers: this.authService.getAuthHeaders()
     }).pipe(catchError(this.errorHandler.handleError));
   }
 
   // Obtiene la lista de pedidos realizados por el usuario
   getMisPedidos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/mis-pedidos`, {
+    return this.http.get<any[]>(`${this.apiUrl}`, {
       headers: this.authService.getAuthHeaders()
     }).pipe(catchError(this.errorHandler.handleError));
   }

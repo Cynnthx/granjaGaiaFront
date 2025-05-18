@@ -15,13 +15,6 @@ export class EventoService {
     private errorHandler: ErrorHandlerService
   ) {}
 
-  private getAuthHeaders() {
-    const token = localStorage.getItem('authToken'); // Asegúrate que coincide con donde guardas el token
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-  }
 
   // Métodos existentes (asegurar que todos incluyan los headers)
   getEventos(): Observable<Evento[]> {
@@ -53,5 +46,18 @@ export class EventoService {
       `${this.apiUrl}/${id}`,
       { headers: this.getAuthHeaders() }
     );
+  }
+
+
+  private getAuthHeaders() {
+    const token = localStorage.getItem('token'); // Asegúrate que coincide con donde guardas el token
+
+    if (!token) {
+      throw new Error('No se encontró el token de autenticación');
+    }
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
   }
 }

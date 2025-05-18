@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { ErrorHandlerService } from './error-handler.service';
@@ -28,17 +28,27 @@ export class ClienteService {
     }).pipe(catchError(this.errorHandler.handleError));
   }
 
-  // Actualizar perfil
-  actualizarPerfil(cliente: any): Observable<any> {
-    const clienteId = this.authService.getCurrentUser()?.id;
+// Editar perfil
+  editarPerfil(cliente: any): Observable<any> {
+    const clienteId = this.authService.getCurrentClienteId();
+
+    if (!clienteId) {
+      // Si no se puede obtener el ID del cliente, lanzamos un error
+      return throwError(() => new Error('No se ha encontrado el ID del cliente.'));
+    }
+
+    // Asegúrate de que la URL del endpoint es correcta
     return this.http.put(`${this.apiUrl}/${clienteId}`, cliente, {
       headers: this.authService.getAuthHeaders()
-    }).pipe(catchError(this.errorHandler.handleError));
+    }).pipe(
+      catchError(this.errorHandler.handleError)
+    );
   }
+
 
   // Subir foto de perfil
   subirFotoPerfil(imagen: File): Observable<any> {
-    const clienteId = this.authService.getCurrentUser()?.id;
+    const clienteId = this.authService.getCurrentClienteId();
     const formData = new FormData();
     formData.append('imagen', imagen);
 
