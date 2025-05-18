@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ClienteService } from '../services/cliente.service';
-import { ErrorHandlerService } from '../services/error-handler.service';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'app-cliente',
@@ -12,17 +11,16 @@ import { ErrorHandlerService } from '../services/error-handler.service';
   templateUrl: './cliente.component.html'
 })
 export class ClienteComponent implements OnInit {
-  cliente: any = null;
-  loading = true;
+  cliente: any = {};
+  loading = false;
   error: string | null = null;
-  editMode = false;
   fotoSeleccionada: File | null = null;
   vistaPreviaFoto: string | null = null;
+  editMode = false;
 
   constructor(
     private clienteService: ClienteService,
-    private errorHandler: ErrorHandlerService,
-    private router: Router
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +40,7 @@ export class ClienteComponent implements OnInit {
       // }
     });
   }
-
+  //
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -68,40 +66,58 @@ export class ClienteComponent implements OnInit {
   }
 
   guardarCambios(): void {
-    this.loading = true;
+    // Verificar primero si tenemos un usuario autenticado
+    const userId = this.authService.getCurrentUserId();
+    if (!userId) {
+      this.error = 'No se pudo identificar tu usuario. Por favor, vuelve a iniciar sesión.';
+      return;
+    }
 
-    // Primero subir la foto si hay una nueva
+    this.loading = true;
+    this.error = null;
+
     if (this.fotoSeleccionada) {
-      this.clienteService.subirFotoPerfil(this.fotoSeleccionada).subscribe({
-        next: () => {
-          // Después de subir la foto, actualizar el resto de datos
-          this.actualizarDatosCliente();
-        },
-        error: (err) => {
-          const errorMsg = this.errorHandler.handleError(err);
-          this.error = typeof errorMsg === 'string' ? errorMsg : 'Ocurrió un error';
-          this.loading = false;
-        }
-      });
+      this.subirFotoYActualizarDatos();
     } else {
       this.actualizarDatosCliente();
     }
   }
 
-  private actualizarDatosCliente(): void {
-    this.clienteService.actualizarPerfil(this.cliente).subscribe({
-      next: () => {
-        this.editMode = false;
-        this.loading = false;
-        this.vistaPreviaFoto = null;
-        this.fotoSeleccionada = null;
-        this.cargarPerfil(); // Recargar datos actualizados
-      },
-      error: (err) => {
-        const errorMsg = this.errorHandler.handleError(err);
-        this.error = typeof errorMsg === 'string' ? errorMsg : 'Ocurrió un error';
-        this.loading = false;
-      }
+  private subirFotoYActualizarDatos(): void {
+    if (!this.fotoSeleccionada) {
+      this.actualizarDatosCliente();
+      return;
+    }
+
+    this.clienteService.subirFotoPerfil(this.fotoSeleccionada).subscribe({
+      next: () => this.actualizarDatosCliente(),
+      error: (err) => this.handleError(err, 'Error al subir la foto')
     });
+  }
+
+  private actualizarDatosCliente(): void {
+    // Verificar nuevamente el ID antes de actualizar
+    const userId = this.authService.getCurrentUserId();
+    if (!userId) {
+      this.handleError(null, 'Sesión inválida. Vuelve a iniciar sesión.');
+      return;
+    }
+
+    this.cliente.usuario = userId;
+
+    this.clienteService.editarPerfil(this.cliente).subscribe({
+      next: () => {
+        this.loading = false;
+        // Aquí podrías recargar los datos o mostrar un mensaje de éxito
+        this.error = null;
+      },
+      error: (err) => this.handleError(err, 'Error al actualizar los datos')
+    });
+  }
+
+  private handleError(error: any, defaultMessage: string): void {
+    this.loading = false;
+    this.error = error?.message || defaultMessage;
+    console.error('Error:', error);
   }
 }
