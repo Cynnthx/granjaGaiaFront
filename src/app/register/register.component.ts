@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -31,12 +31,12 @@ export class RegisterComponent {
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
       confirmarContrasena: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
-
   }
 
   passwordMatchValidator(form: FormGroup) {
-    return form.get('contrasena')?.value === form.get('confirmarContrasena')?.value
-      ? null : { 'passwordMismatch': true };
+    const password = form.get('contrasena')?.value;
+    const confirmPassword = form.get('confirmarContrasena')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   onRegister() {
@@ -57,8 +57,8 @@ export class RegisterComponent {
           this.errorMessage = err?.error?.mensaje || 'Error en el registro. Por favor, inténtalo de nuevo.';
         }
       });
-
+    } else {
+      this.errorMessage = 'Por favor, completa correctamente todos los campos obligatorios.';
     }
   }
-
 }
