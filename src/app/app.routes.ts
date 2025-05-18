@@ -10,6 +10,7 @@ import { EventoAdminComponent } from './evento-admin/evento-admin.component';
 import { TiendaComponent } from './tienda/tienda.component';
 import {CategoriaComponent} from './categoria/categoria.component';
 import {TiendaAdminComponent} from './tienda-admin/tienda-admin.component';
+import {DetallesPedidoCarritoComponent} from './detalles-pedido-carrito/detalles-pedido-carrito.component';
 // import { ProductoDetalleComponent } from './producto-detalle/producto-detalle.component';
 
 export const routes: Routes = [
@@ -24,6 +25,8 @@ export const routes: Routes = [
   { path: 'tienda', component: TiendaComponent },
   { path: 'categorias', component: CategoriaComponent },
   { path: 'admintienda', component: TiendaAdminComponent },
+  { path: 'carrito', component: DetallesPedidoCarritoComponent },
+
 
 // { path: 'producto/:id', component: ProductoDetalleComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' }, // Ruta por defecto
