@@ -1,34 +1,202 @@
-<!-- src/app/detalles-pedido-carrito/detalles-pedido-carrito.component.html -->
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-center mb-8 text-purple-900">🛒 Tu Carrito</h1>
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <div *ngIf="detallesPedido.length === 0" class="text-center py-4">
-      <p class="text-gray-500">Tu carrito está vacío</p>
+<div class="min-h-screen flex flex-col bg-[#938EBA]">
+  <!-- Header -->
+  <header class="bg-[#73487A] shadow-sm">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-white">Granja Gaia</h1>
+      <nav class="flex space-x-6">
+        <a href="/tienda" class="text-white hover:text-gray-200 font-medium">Tienda</a>
+        <a href="/contact" class="text-white hover:text-gray-200 font-medium">Contacto</a>
+      </nav>
     </div>
-    <div *ngFor="let item of detallesPedido" class="py-4 border-b border-gray-200 last:border-b-0">
-      <div class="flex justify-between">
-        <div>
-          <h4 class="font-medium text-purple-900">{{item.nombreProducto}}</h4>
-          <p class="text-sm text-gray-500">{{item.precioUnitario | currency}} x {{item.cantidad}}</p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto p-8 bg-[#B1C4DD] rounded-2xl shadow-md">
+    <h2 class="text-3xl font-extrabold text-[#73487A] mb-8 border-b-2 border-[#73487A] pb-4">Detalle del Carrito</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Tarjeta de producto más pequeña -->
+      <div *ngFor="let producto of productosComprar" class="bg-gradient-to-br from-white to-purple-50 p-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center space-y-2 border border-purple-100 transform hover:-translate-y-1">
+        <!-- Imagen del producto -->
+        <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-[#73487A] shadow-md transition-transform duration-300 hover:scale-105">
+          <img [src]="producto.imagenUrl" alt="{{ producto.nombreProducto }}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
         </div>
-        <div class="flex items-center">
-          <span class="font-bold mr-4">{{item.total | currency}}</span>
-          <button (click)="eliminarDetalle(item.id)" class="text-red-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-            </svg>
+        <!-- Nombre del producto -->
+        <h3 class="text-base font-semibold text-[#4A2C55] text-center tracking-tight">{{ producto.nombreProducto }}</h3>
+        <!-- Control de cantidad más compacto -->
+        <div class="flex items-center space-x-2 bg-purple-50 px-3 py-1.5 rounded-full">
+          <button (click)="decrementarCantidad(producto)" class="w-6 h-6 rounded-full bg-gradient-to-b from-[#73487A] to-[#5D3A64] text-white text-sm font-bold flex items-center justify-center hover:shadow-inner hover:from-[#5D3A64] hover:to-[#4A2C55] transition-all active:scale-95">
+            −
+          </button>
+          <span class="text-gray-800 font-medium text-base min-w-[20px] text-center">{{ producto.cantidad }}</span>
+          <button (click)="incrementarCantidad(producto)" class="w-6 h-6 rounded-full bg-gradient-to-b from-[#73487A] to-[#5D3A64] text-white text-sm font-bold flex items-center justify-center hover:shadow-inner hover:from-[#5D3A64] hover:to-[#4A2C55] transition-all active:scale-95">
+            +
           </button>
         </div>
+        <!-- Precios -->
+        <div class="text-center space-y-0.5">
+          <p class="text-lg text-gray-500">
+            Unidad:
+            <span class="text-xl text-[#4A2C55] ">{{ producto.precioUnitario }}€</span>
+          </p>
+          <p class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#73487A] to-[#9B59B6]">
+            {{ (producto.precioUnitario * producto.cantidad).toFixed(2) }}€
+          </p>
+        </div>
+        <!-- Botón eliminar más compacto -->
+        <button (click)="eliminarProductoGuardado(producto)" class="mt-1 px-2 py-0.5 rounded-full text-xs font-medium text-red-600 hover:text-white hover:bg-red-500 transition-all duration-300 flex items-center space-x-1 border border-red-200 hover:border-transparent group">
+          <span class="group-hover:scale-110 transition-transform">Eliminar</span>
+        </button>
       </div>
+
     </div>
-    <div *ngIf="detallesPedido.length > 0" class="mt-6">
-      <div class="flex justify-between py-2 border-t border-gray-200">
-        <span class="font-semibold">Total:</span>
-        <span class="font-bold text-purple-900">{{totalCarrito | currency}}</span>
-      </div>
-      <button (click)="vaciarCarrito()" class="w-full mt-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-        Vaciar Carrito
+
+    <!-- Botón para vaciar el carrito -->
+    <div class="mt-4 text-right space-x-4">
+      <button (click)="vaciarCarrito()" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded shadow-md">
+        Vaciar Carrito 🗑️
       </button>
     </div>
+
+
+    <!-- Resumen del carrito -->
+    <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+      <div class="flex justify-between items-center">
+        <h3 class="text-xl font-bold text-gray-800">Total del Carrito</h3>
+        <p class="text-xl font-bold text-blue-600">{{ totalCarrito.toFixed(2) }}€</p>
+      </div>
+      <div class="mt-4 text-right">
+        <button (click)="toggleModal()" class="px-6 py-3 bg-[#73487A] hover:bg-[#5a3a60] text-white font-semibold rounded shadow-md">
+          Tramitar Pedido
+        </button>
+      </div>
+    </div>
+
+
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#73487A] py-8 mt-auto">
+    <div class="container mx-auto px-4 text-center text-white">
+      <p>© 2023 Granja Escuela Gaia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+      <h3 class="text-2xl font-bold text-gray-800 mb-4">Tramitar Pedido</h3>
+
+      <!-- Paso 1: Seleccionar metodo de pago -->
+      <div *ngIf="pasoActual === 1">
+        <h4 class="text-lg font-semibold mb-4">Seleccionar Método de Pago</h4>
+        <div class="space-y-4">
+          <label class="flex items-center space-x-2">
+            <input
+              type="radio"
+              name="metodoPago"
+              value="tarjeta"
+              (change)="metodoPagoSeleccionado = 'tarjeta'" />
+            <span>Tarjeta de Crédito/Débito</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="radio"
+              name="metodoPago"
+              value="paypal"
+              (change)="metodoPagoSeleccionado = 'paypal'" />
+            <span>PayPal</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="radio"
+              name="metodoPago"
+              value="transferencia"
+              (change)="metodoPagoSeleccionado = 'transferencia'" />
+            <span>Transferencia Bancaria</span>
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="pasoActual === 2">
+        <h4 class="text-lg font-semibold mb-4">Introducir Datos</h4>
+        <div *ngIf="metodoPagoSeleccionado === 'tarjeta'" [formGroup]="getFormGroup('tarjeta')" class="space-y-4">
+          <input type="text" class="w-full p-2 border rounded" placeholder="Número de Tarjeta" formControlName="numero">
+          <div *ngIf="getFormGroup('tarjeta').get('numero')?.invalid && getFormGroup('tarjeta').get('numero')?.touched" class="text-red-500 text-sm">
+            Número de tarjeta inválido.
+          </div>
+          <input type="text" class="w-full p-2 border rounded" placeholder="Titular" formControlName="titular">
+          <div *ngIf="getFormGroup('tarjeta').get('titular')?.invalid && getFormGroup('tarjeta').get('titular')?.touched" class="text-red-500 text-sm">
+            Titular es requerido.
+          </div>
+          <input type="text" class="w-full p-2 border rounded" placeholder="Fecha de Expiración" formControlName="fecha">
+          <div *ngIf="getFormGroup('tarjeta').get('fecha')?.invalid && getFormGroup('tarjeta').get('fecha')?.touched" class="text-red-500 text-sm">
+            Fecha de expiración es requerida.
+          </div>
+          <input type="text" class="w-full p-2 border rounded" placeholder="CVV" formControlName="cvv">
+          <div *ngIf="getFormGroup('tarjeta').get('cvv')?.invalid && getFormGroup('tarjeta').get('cvv')?.touched" class="text-red-500 text-sm">
+            CVV inválido.
+          </div>
+        </div>
+        <div *ngIf="metodoPagoSeleccionado === 'paypal'" [formGroup]="getFormGroup('paypal')" class="space-y-4">
+          <input type="email" class="w-full p-2 border rounded" placeholder="Correo de PayPal" formControlName="email">
+          <div *ngIf="getFormGroup('paypal').get('email')?.invalid && getFormGroup('paypal').get('email')?.touched" class="text-red-500 text-sm">
+            Correo de PayPal inválido.
+          </div>
+        </div>
+        <div *ngIf="metodoPagoSeleccionado === 'transferencia'" [formGroup]="getFormGroup('transferencia')" class="space-y-4">
+          <input type="text" class="w-full p-2 border rounded" placeholder="Banco" formControlName="banco">
+          <div *ngIf="getFormGroup('transferencia').get('banco')?.invalid && getFormGroup('transferencia').get('banco')?.touched" class="text-red-500 text-sm">
+            Banco es requerido.
+          </div>
+          <input type="text" class="w-full p-2 border rounded" placeholder="Número de Cuenta" formControlName="cuenta">
+          <div *ngIf="getFormGroup('transferencia').get('cuenta')?.invalid && getFormGroup('transferencia').get('cuenta')?.touched" class="text-red-500 text-sm">
+            Número de cuenta es requerido.
+          </div>
+        </div>
+      </div>
+
+      <!-- Paso 3: Confirmar pago -->
+      <div *ngIf="pasoActual === 3">
+        <h4 class="text-lg font-semibold mb-4">Confirmación</h4>
+        <p class="mb-4"><strong>Método de Pago:</strong> {{ metodoPagoSeleccionado }}</p>
+        <div *ngIf="metodoPagoSeleccionado === 'tarjeta'" class="space-y-2">
+          <p><strong>Número de Tarjeta:</strong> {{ getFormGroup('tarjeta').get('numero')?.value | slice: -4 }}</p>
+          <p><strong>Titular:</strong> {{ getFormGroup('tarjeta').get('titular')?.value }}</p>
+          <p><strong>Fecha de Expiración:</strong> {{ getFormGroup('tarjeta').get('fecha')?.value }}</p>
+        </div>
+        <div *ngIf="metodoPagoSeleccionado === 'paypal'" class="space-y-2">
+          <p><strong>Email de PayPal:</strong> {{ getFormGroup('paypal').get('email')?.value }}</p>
+        </div>
+        <div *ngIf="metodoPagoSeleccionado === 'transferencia'" class="space-y-2">
+          <p><strong>Banco:</strong> {{ getFormGroup('transferencia').get('banco')?.value }}</p>
+          <p><strong>Número de Cuenta:</strong> {{ getFormGroup('transferencia').get('cuenta')?.value }}</p>
+        </div>
+        <p class="mt-4 text-lg font-semibold"><strong>Total a pagar:</strong> ${{ totalCarrito.toFixed(2) }}</p>
+      </div>
+
+      <!-- Botones de navegación -->
+      <div class="mt-6 flex justify-between">
+        <button
+          *ngIf="pasoActual > 1"
+          class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded"
+          (click)="pasoAnterior()">
+          Atrás
+        </button>
+        <button
+          class="px-4 py-2 bg-[#73487A] hover:bg-[#5a3a60] text-white font-semibold rounded"
+          (click)="siguientePaso()">
+          {{ pasoActual < 3 ? 'Siguiente' : 'Pagar' }}
+        </button>
+        <button
+          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded"
+          (click)="toggleModal()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+
+
   </div>
 </div>
