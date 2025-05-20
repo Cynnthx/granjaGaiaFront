@@ -46,8 +46,8 @@ export class LoginComponent {
           if(response.clienteId != null){
 
             // Crear un nuevo pedido
-            const pedidoCreado = await lastValueFrom(this.pedidoService.crearPedido(response.clienteId));
-            localStorage.setItem('pedidoId', String(pedidoCreado.id));
+            // const pedidoCreado = await lastValueFrom(this.pedidoService.crearPedido(response.clienteId));
+            // localStorage.setItem('pedidoId', String(pedidoCreado.id));
           }
 
 
