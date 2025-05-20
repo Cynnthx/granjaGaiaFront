@@ -28,34 +28,17 @@ export class ClienteService {
     }).pipe(catchError(this.errorHandler.handleError));
   }
 
+
 // Editar perfil
-  editarPerfil(cliente: any): Observable<any> {
-    const clienteId = this.authService.getCurrentClienteId();
 
-    if (!clienteId) {
-      // Si no se puede obtener el ID del cliente, lanzamos un error
-      return throwError(() => new Error('No se ha encontrado el ID del cliente.'));
+  editarPerfil(cliente: any) {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
     }
-
-    // Asegúrate de que la URL del endpoint es correcta
-    return this.http.put(`${this.apiUrl}/${clienteId}`, cliente, {
-      headers: this.authService.getAuthHeaders()
-    }).pipe(
-      catchError(this.errorHandler.handleError)
-    );
+    return this.http.put(`/api/clientes/${cliente.id}`, cliente, { headers });
   }
 
 
-  // Subir foto de perfil
-  subirFotoPerfil(imagen: File): Observable<any> {
-    const clienteId = this.authService.getCurrentClienteId();
-    const formData = new FormData();
-    formData.append('imagen', imagen);
-
-    return this.http.post(`${this.apiUrl}/${clienteId}/foto-perfil`, formData, {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${this.authService.getToken()}`
-      })
-    }).pipe(catchError(this.errorHandler.handleError));
-  }
 }

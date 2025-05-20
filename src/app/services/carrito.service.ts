@@ -12,6 +12,7 @@ export interface DetallesPedidoDTO {
   cantidad: number;
   precioUnitario: number;
   total: number;
+  imagen?: string;
 }
 
 @Injectable({
@@ -27,7 +28,7 @@ export class CarritoService {
 
   // Obtener todos los detalles del pedido
   obtenerDetalles(): Observable<DetallesPedidoDTO[]> {
-    return this.http.get<DetallesPedidoDTO[]>(`${this.apiUrl}/detalles`, {
+    return this.http.get<DetallesPedidoDTO[]>(`${this.apiUrl}/detalle`, {
       headers: this.authService.getAuthHeaders()
     }).pipe(catchError(this.errorHandler.handleError));
   }
@@ -39,18 +40,19 @@ export class CarritoService {
     }).pipe(catchError(this.errorHandler.handleError));
   }
 
-  // Actualizar un detalle del carrito
+// Actualizar un detalle del carrito
   actualizarDetalle(detalle: DetallesPedidoDTO): Observable<DetallesPedidoDTO> {
-    return this.http.put<DetallesPedidoDTO>(`${this.apiUrl}/actualizar/${detalle.id}`, detalle);
+    return this.http.put<DetallesPedidoDTO>(`${this.apiUrl}/actualizar/${detalle.id}`, detalle, {
+      headers: this.authService.getAuthHeaders()
+    }).pipe(catchError(this.errorHandler.handleError));
   }
 
-  // Eliminar un detalle del carrito
+// Eliminar un detalle del carrito
   eliminarDetalle(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/detalle/${id}`, {
+      headers: this.authService.getAuthHeaders()
+    }).pipe(catchError(this.errorHandler.handleError));
   }
 
-  // Vaciar el carrito
-  vaciarCarrito(): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/vaciar`);
-  }
+
 }
