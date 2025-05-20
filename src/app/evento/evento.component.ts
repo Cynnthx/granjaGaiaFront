@@ -49,7 +49,22 @@ export class EventoComponent implements OnInit {
   }
 
 
+  // irAInscripcion(eventoId: number): void {
+  //   this.router.navigate(['/cliente', eventoId]);
+  // }
+
+  mostrarModal: boolean = false;
+
   irAInscripcion(eventoId: number): void {
-    this.router.navigate(['/cliente', eventoId]);
+    // Mostrar primero el modal
+    this.mostrarModal = true;
+
+    // Navegar después de un pequeño delay si quieres automatizarlo
+    // this.router.navigate(['/cliente', eventoId]); // Si quieres navegar de inmediato
   }
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
+  }
+
 }
