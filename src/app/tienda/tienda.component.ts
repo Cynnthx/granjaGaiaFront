@@ -104,14 +104,15 @@ export class TiendaComponent implements OnInit {
   }
 
   agregarAlCarrito(producto: ProductoDTO): void {
-    const pedidoId = localStorage.getItem('pedidoId');
-    if (pedidoId === null) {
-      alert('No hay un pedido activo. Por favor, inicia sesión o crea un nuevo pedido.');
+    const idcliente = localStorage.getItem('clienteId');
+    if (idcliente === null) {
+      alert(' Por favor, inicia sesión o crea un nuevo pedido.');
       return;
     }
     // Verificar si el producto ya está en el carrito
     const detallePedido: DetallesPedidoDTO = {
-      id: localStorage.getItem('pedidoId') ? + pedidoId : null,
+      // id: localStorage.getItem('pedidoId') ? + pedidoId : null,
+      id: null,
       idProducto: producto.id,
       nombreProducto: producto.nombre,
       cantidad: 1,
@@ -119,14 +120,34 @@ export class TiendaComponent implements OnInit {
       total: producto.precio
     };
 
-    this.carritoService.agregarDetalle(detallePedido).subscribe({
-      next: () => {
-        alert(`${producto.nombre} añadido al carrito`);
-      },
-      error: (err) => {
-        console.error('Error al agregar al carrito', err);
-        alert('Error al agregar al carrito');
-      }
-    });
+
+    //Add a sesion la lista de productos que quiero comprar
+    let productosComprar = JSON.parse(localStorage.getItem('productosComprar') || '[]');
+
+    let productoExiste = productosComprar.filter((p:any)=> p.idProducto === detallePedido.idProducto);
+
+    if (productoExiste.length > 0) {
+      let productoExistente = productoExiste[0];
+      productoExistente.cantidad += 1;
+    }else {
+      productosComprar.push(detallePedido);
+    }
+
+
+    localStorage.setItem('productosComprar', JSON.stringify(productosComprar));
+
+      // Tu lógica actual para agregar al carrito
+      alert('¡Producto añadido al carrito!');
+
+    // this.carritoService.agregarDetalle(detallePedido).subscribe({
+    //   next: () => {
+    //     alert(`${producto.nombre} añadido al carrito`);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al agregar al carrito', err);
+    //     alert('Error al agregar al carrito');
+    //   }
+    // });
   }
+
 }
