@@ -34,11 +34,14 @@ export class PedidoService {
     }).pipe(catchError(this.errorHandler.handleError));
   }
 
-  // Obtiene la lista de pedidos realizados por el usuario
-  getMisPedidos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`, {
+// Obtiene la lista de pedidos realizados por el cliente
+  getMisPedidos(clienteId: number): Observable<PedidoDTO[]> {
+    const url = `${this.apiUrl}/cliente/${clienteId}`;
+    return this.http.get<PedidoDTO[]>(url, {
       headers: this.authService.getAuthHeaders()
-    }).pipe(catchError(this.errorHandler.handleError));
+    }).pipe(
+      catchError(this.errorHandler.handleError)
+    );
   }
 
   // Obtiene los detalles de un pedido específico por su ID

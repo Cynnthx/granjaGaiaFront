@@ -12,7 +12,7 @@ export interface DetallesPedidoDTO {
   cantidad: number;
   precioUnitario: number;
   total: number;
-  imagen?: string;
+  imagenUrl?: string;
 }
 
 @Injectable({
@@ -28,9 +28,10 @@ export class CarritoService {
 
   // Obtener todos los detalles del pedido
   obtenerDetalles(): Observable<DetallesPedidoDTO[]> {
-    return this.http.get<DetallesPedidoDTO[]>(`${this.apiUrl}/detalle`, {
+    return this.http.get<DetallesPedidoDTO[]>(`${this.apiUrl}/pedido`, {
       headers: this.authService.getAuthHeaders()
     }).pipe(catchError(this.errorHandler.handleError));
+    ///${id} pasandole un id:number
   }
 
   // Agregar un nuevo detalle al carrito
