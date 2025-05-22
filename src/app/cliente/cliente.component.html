@@ -6,8 +6,8 @@
       <nav class="flex space-x-6">
         <a href='/home' class="text-white hover:text-gray-200 font-medium">Home</a>
         <a href="/events" class="text-white hover:text-gray-200 font-medium">Eventos</a>
-        <a href="#" class="text-white hover:text-gray-200 font-medium">Tienda</a>
-        <a href="/contact" class="text-white hover:text-gray-200 font-medium">Contacto</a>
+        <a href="/tienda" class="text-white hover:text-gray-200 font-medium">Tienda</a>
+        <a href="/carrito" class="text-white hover:text-gray-200 font-medium">Carrito</a>
       </nav>
     </div>
   </header>
@@ -63,21 +63,51 @@
               <p class="mt-1 text-gray-900">{{ cliente.telefono }}</p>
             </ng-template>
           </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-500">Dirección</label>
+              <textarea *ngIf="editMode; else direccionView"
+                        [(ngModel)]="cliente.direccion"
+                        rows="3"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+              <ng-template #direccionView>
+                <p class="mt-1 text-gray-900">{{ cliente.direccion }}</p>
+              </ng-template>
+            </div>
+          </div>
         </div>
 
         <!-- Columna derecha -->
         <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-500">Dirección</label>
-            <textarea *ngIf="editMode; else direccionView"
-                      [(ngModel)]="cliente.direccion"
-                      rows="3"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-            <ng-template #direccionView>
-              <p class="mt-1 text-gray-900">{{ cliente.direccion }}</p>
-            </ng-template>
+          <h2 class="text-xl font-semibold text-gray-700">Mis pedidos</h2>
+
+          <div *ngIf="pedidos.length === 0" class="text-gray-600">
+            No tienes pedidos realizados.
+          </div>
+
+          <div *ngIf="pedidos.length > 0" class="overflow-x-auto">
+            <table class="min-w-full border rounded-lg shadow-sm">
+              <thead class="bg-indigo-200 text-indigo-900">
+              <tr>
+                <th class="px-4 py-2 text-left">ID</th>
+                <th class="px-4 py-2 text-left">Fecha</th>
+                <th class="px-4 py-2 text-left">Estado</th>
+                <th class="px-4 py-2 text-left">Total</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let pedido of pedidos" class="bg-white hover:bg-indigo-50 transition-colors">
+                <td class="px-4 py-2">{{ pedido.id }}</td>
+                <td class="px-4 py-2">{{ pedido.fecha | date:'short' }}</td>
+                <td class="px-4 py-2">{{ pedido.estado }}</td>
+                <td class="px-4 py-2">{{ pedido.total | currency:'EUR' }}</td>
+              </tr>
+              </tbody>
+            </table>
           </div>
         </div>
+
+
       </div>
 
       <!-- Botones -->

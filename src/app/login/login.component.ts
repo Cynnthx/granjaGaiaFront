@@ -40,6 +40,11 @@ export class LoginComponent {
           // Guardar el clienteId en localStorage
           localStorage.setItem('clienteId', String(response.clienteId));
 
+
+          // 🆕 Vaciar el carrito al iniciar sesión
+          localStorage.removeItem('productosComprar');
+
+
           const role = response.rol;
           console.log("Rol del usuario:", role);
 

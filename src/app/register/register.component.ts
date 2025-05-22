@@ -33,6 +33,35 @@ export class RegisterComponent {
     }, { validators: this.passwordMatchValidator });
   }
 
+  private esDniNieValido(dniNie: string): boolean {
+    if (!dniNie) return false;
+
+    const letras = 'TRWAGMYFPDXBNJZSQVHLCKE';
+    dniNie = dniNie.toUpperCase().trim();
+
+    // NIE
+    if (/^[XYZ]\d{7}[A-Z]$/.test(dniNie)) {
+      const letraInicial = dniNie.charAt(0);
+      const numeroBase = {
+        'X': '0',
+        'Y': '1',
+        'Z': '2'
+      }[letraInicial] + dniNie.substring(1, 8);
+
+      const resto = parseInt(numeroBase) % 23;
+      return dniNie.charAt(8) === letras.charAt(resto);
+    }
+
+    // DNI
+    if (/^\d{8}[A-Z]$/.test(dniNie)) {
+      const numero = parseInt(dniNie.substring(0, 8));
+      const resto = numero % 23;
+      return dniNie.charAt(8) === letras.charAt(resto);
+    }
+
+    return false;
+  }
+
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('contrasena')?.value;
     const confirmPassword = form.get('confirmarContrasena')?.value;
@@ -40,6 +69,11 @@ export class RegisterComponent {
   }
 
   onRegister() {
+    if (!this.esDniNieValido(this.registerForm.value.dni)) {
+      this.errorMessage = 'DNI o NIE incorrecto.';
+      return;
+    }
+
     if (this.registerForm.valid) {
       const formData = { ...this.registerForm.value };
       delete formData.confirmarContrasena;

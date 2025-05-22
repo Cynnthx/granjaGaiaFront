@@ -56,6 +56,7 @@ export class DetallesPedidoCarritoComponent implements OnInit {
   cargarProductos(): void {
     this.carritoService.obtenerDetalles().subscribe(
       (productos) => {
+        console.log(productos);
         this.productosEnCarrito = productos;
         this.calcularTotal();
       },
@@ -213,6 +214,7 @@ export class DetallesPedidoCarritoComponent implements OnInit {
   procesarPago(): void {
     console.log('Procesando pago con:', this.metodoPagoSeleccionado);
     alert('Pago procesado con éxito!');
+    this.vaciarCarrito();
     this.resetearProcesoPago();
     this.toggleModal();
   }
