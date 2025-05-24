@@ -3,6 +3,8 @@ import { CarritoService, DetallesPedidoDTO } from '../services/carrito.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import {Producto} from '../models/producto';
+import {PedidoService} from '../services/pedido.service';
+import {lastValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-detalles-pedido-carrito',
@@ -28,7 +30,9 @@ export class DetallesPedidoCarritoComponent implements OnInit {
 
   constructor(
     private carritoService: CarritoService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private pedidoService: PedidoService,
+    private detallePedidoService: CarritoService
   ) {
     // Inicializar formularios
     this.tarjetaForm = this.fb.group({
@@ -49,26 +53,14 @@ export class DetallesPedidoCarritoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarProductos();
     this.cargarProductosComprar();
   }
 
-  cargarProductos(): void {
-    this.carritoService.obtenerDetalles().subscribe(
-      (productos) => {
-        console.log(productos);
-        this.productosEnCarrito = productos;
-        this.calcularTotal();
-      },
-      (error) => {
-        console.error('Error al cargar los productos del carrito:', error);
-      }
-    );
-  }
 
   cargarProductosComprar(): void {
     const data = localStorage.getItem('productosComprar');
     this.productosComprar = data ? JSON.parse(data) : [];
+    console.log(this.productosComprar)
     this.calcularTotal(); // Añadido para calcular total al cargar
   }
 
@@ -144,7 +136,6 @@ export class DetallesPedidoCarritoComponent implements OnInit {
     localStorage.removeItem('productosComprar');
     this.productosComprar = [];
     this.calcularTotal();
-    alert('Carrito vaciado correctamente.');
   }
 
   // Métodos para el modal de pago
@@ -212,11 +203,40 @@ export class DetallesPedidoCarritoComponent implements OnInit {
   }
 
   procesarPago(): void {
-    console.log('Procesando pago con:', this.metodoPagoSeleccionado);
-    alert('Pago procesado con éxito!');
-    this.vaciarCarrito();
-    this.resetearProcesoPago();
-    this.toggleModal();
+
+    const clienteId = localStorage.getItem('clienteId');
+    if (clienteId === null) {
+      alert('Por favor, inicia sesión o crea un nuevo pedido.');
+      return;
+    }
+    this.pedidoService.crearPedido(Number(clienteId)).subscribe({
+      next: async (pedido)  => {
+        if (!pedido || !pedido.id) {
+          alert('Error al crear el pedido');
+          return;
+        }
+
+        for (const producto of this.productosComprar) {
+          const detalle: DetallesPedidoDTO = {
+            id: pedido.id,
+            idProducto: producto.idProducto,
+            nombreProducto: producto.nombre,
+            cantidad: producto.cantidad,
+            precioUnitario: producto.precioUnitario,
+            total: producto.precioUnitario * producto.cantidad,
+            imagenUrl: producto.imagenUrl
+          };
+        await lastValueFrom(this.detallePedidoService.agregarDetalle(detalle));
+        }
+        await lastValueFrom(this.pedidoService.actualizarEstadoPedido(pedido.id, 'pagado'));
+        console.log('Procesando pago con:', this.metodoPagoSeleccionado);
+        alert('Pago procesado con éxito!');
+        this.vaciarCarrito();
+        this.resetearProcesoPago();
+        this.toggleModal();
+      }
+    })
+
   }
 
   resetearProcesoPago(): void {
@@ -226,6 +246,8 @@ export class DetallesPedidoCarritoComponent implements OnInit {
     this.paypalForm.reset();
     this.transferenciaForm.reset();
   }
+
+
 
 
 }
