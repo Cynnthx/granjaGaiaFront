@@ -109,17 +109,21 @@ export class TiendaComponent implements OnInit {
       alert(' Por favor, inicia sesión o crea un nuevo pedido.');
       return;
     }
+
     // Verificar si el producto ya está en el carrito
     const detallePedido: DetallesPedidoDTO = {
+
       // id: localStorage.getItem('pedidoId') ? + pedidoId : null,
       id: null,
       idProducto: producto.id,
       nombreProducto: producto.nombre,
       cantidad: 1,
       precioUnitario: producto.precio,
-      total: producto.precio
+      total: producto.precio,
+      imagenUrl: producto.imagenUrl
     };
-
+    console.log(producto)
+    console.log(detallePedido)
 
     //Add a sesion la lista de productos que quiero comprar
     let productosComprar = JSON.parse(localStorage.getItem('productosComprar') || '[]');

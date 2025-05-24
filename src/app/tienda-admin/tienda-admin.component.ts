@@ -5,7 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CategoriaService } from '../services/categoria.service';  // ✅ Ruta corregida
+import { CategoriaService } from '../services/categoria.service';
+import {PedidoDTO, PedidoService} from '../services/pedido.service';  // ✅ Ruta corregida
 
 interface ProductoDTO {
   id: number;
@@ -34,6 +35,12 @@ interface Categoria {
 export class TiendaAdminComponent implements OnInit {
   productos: ProductoDTO[] = [];
   categorias: Categoria[] = [];
+  pedidos: PedidoDTO[] = [];
+  estados = ['pagado', 'enviado', 'completado'];
+  loadingPedido = false;
+  errorPedido : string | null = null;
+  successMessagePedido: string | null = null;
+
   loading = false;
   error: string | null = null;
   successMessage: string | null = null;
@@ -56,12 +63,14 @@ export class TiendaAdminComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private pedidoService: PedidoService
   ) {}
 
   ngOnInit(): void {
     this.cargarCategorias();
     this.cargarProductos();
+    this.cargarPedidos();
   }
 
   cargarCategorias() {
@@ -91,6 +100,22 @@ export class TiendaAdminComponent implements OnInit {
           this.loading = false;
         }
       });
+  }
+
+  cargarPedidos(): void{
+    this.loadingPedido = true;
+
+    this.pedidoService.getAllPedidos().subscribe({
+      next: (pedidos: PedidoDTO[]) => {
+        this.pedidos = pedidos;
+        this.loadingPedido = false;
+      },
+      error: (err) => {
+        this.errorPedido = 'Error al cargar los pedidos';
+        console.error(err);
+        this.loadingPedido = false;
+      }
+    });
   }
 
   nuevoProducto(): void {
@@ -210,5 +235,23 @@ export class TiendaAdminComponent implements OnInit {
 
     this.error = null;
     return true;
+  }
+
+  cambiarEstadoPedido(pedido: PedidoDTO) {
+    this.loadingPedido = true;
+    this.errorPedido = null;
+    this.successMessagePedido = null;
+
+    this.pedidoService.actualizarEstadoPedido(pedido.id!, pedido.estado).subscribe({
+      next: () => {
+        this.successMessagePedido = 'Estado del pedido actualizado correctamente';
+        this.cargarPedidos();
+      },
+      error: (err) => {
+        this.errorPedido = 'Error al actualizar el estado del pedido';
+        console.error(err);
+        this.loadingPedido = false;
+      }
+    });
   }
 }
