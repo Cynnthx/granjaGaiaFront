@@ -17,6 +17,8 @@ import {PedidoDTO, PedidoService} from '../services/pedido.service';
 export class ClienteComponent implements OnInit {
   cliente: any = {};
   pedidos: PedidoDTO[] = [];
+  estados = ['pagado', 'enviado', 'completado'];
+
   loading = false;
   error: string | null = null;
   editMode = false;
@@ -32,7 +34,7 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarPerfil();
-    this.cargarPedidos();
+
   }
 
 

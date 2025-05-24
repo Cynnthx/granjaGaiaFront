@@ -99,7 +99,11 @@
               <tr *ngFor="let pedido of pedidos" class="bg-white hover:bg-indigo-50 transition-colors">
                 <td class="px-4 py-2">{{ pedido.id }}</td>
                 <td class="px-4 py-2">{{ pedido.fecha | date:'short' }}</td>
-                <td class="px-4 py-2">{{ pedido.estado }}</td>
+                <td class="px-4 py-2">
+                  <select class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs" disabled>
+                    <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+                  </select>
+                </td>
                 <td class="px-4 py-2">{{ pedido.total | currency:'EUR' }}</td>
               </tr>
               </tbody>
