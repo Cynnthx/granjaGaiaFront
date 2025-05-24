@@ -50,4 +50,18 @@ export class PedidoService {
       headers: this.authService.getAuthHeaders()
     }).pipe(catchError(this.errorHandler.handleError));
   }
+
+  // Obtener todos los pedidos (Admin)
+  getAllPedidos(): Observable<PedidoDTO[]> {
+    return this.http.get<PedidoDTO[]>(`${this.apiUrl}/all`, {
+      headers: this.authService.getAuthHeaders()
+    }).pipe(catchError(this.errorHandler.handleError));
+  }
+
+  // Actualizar el estado de un pedido
+  actualizarEstadoPedido(pedidoId: number, estado: string): Observable<PedidoDTO> {
+    return this.http.put<PedidoDTO>(`${this.apiUrl}/${pedidoId}/estado?estado=${estado}`, {}, {
+      headers: this.authService.getAuthHeaders()
+    }).pipe(catchError(this.errorHandler.handleError));
+  }
 }
