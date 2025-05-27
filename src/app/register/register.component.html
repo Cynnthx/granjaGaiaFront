@@ -1,0 +1,105 @@
+<div class="min-h-screen flex flex-col bg-[#73487A]">
+  <main class="flex-grow flex items-center justify-center py-12">
+    <div class="w-full max-w-5xl bg-[#B1C4DD] rounded-3xl shadow-2xl overflow-hidden">
+      <div class="w-full p-8 sm:p-10">
+        <div class="text-center mb-8">
+          <img src="/logo-removebg-preview.png" alt="Logo Granja Gaia" class="mx-auto mb-4 h-20">
+          <h2 class="text-3xl font-bold text-[#73487A]">Regístrate en GranjaGaia</h2>
+        </div>
+
+        <form class="grid grid-cols-1 md:grid-cols-2 gap-6" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <!-- Columna izquierda -->
+          <div>
+            <label for="nombre" class="block text-sm font-semibold text-[#73487A]">Nombre completo</label>
+            <input id="nombre" type="text" formControlName="nombre" required
+                   placeholder="Tu nombre completo"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="apellidos" class="block text-sm font-semibold text-[#73487A]">Apellidos</label>
+            <input id="apellidos" type="text" formControlName="apellidos" required
+                   placeholder="Tus apellidos"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="nickname" class="block text-sm font-semibold text-[#73487A]">Nombre de usuario</label>
+            <input id="nickname" type="text" formControlName="nickname" required
+                   placeholder="Ej. jose3"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="dni" class="block text-sm font-semibold text-[#73487A]">DNI</label>
+            <input id="dni" type="text" formControlName="dni" pattern="[0-9]{8}[A-Za-z]{1}" required
+                   placeholder="12345678X"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="direccion" class="block text-sm font-semibold text-[#73487A]">Dirección</label>
+            <input id="direccion" type="text" formControlName="direccion" required
+                   placeholder="Tu dirección"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="telefono" class="block text-sm font-semibold text-[#73487A]">Teléfono</label>
+            <input id="telefono" type="tel" formControlName="telefono" pattern="[0-9]{9}" required
+                   placeholder="612345678"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-semibold text-[#73487A]">Email</label>
+            <input id="email" type="email" formControlName="email" required
+                   placeholder="tu@email.com"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="fotoPerfil" class="block text-sm font-semibold text-[#73487A]">Foto de perfil (URL)</label>
+            <input id="fotoPerfil" type="url" formControlName="fotoPerfil"
+                   placeholder="https://ejemplo.com/foto.jpg"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="contrasena" class="block text-sm font-semibold text-[#73487A]">Contraseña</label>
+            <input id="contrasena" type="password" formControlName="contrasena" required minlength="6"
+                   placeholder="Tu contraseña"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <div>
+            <label for="confirmarContrasena" class="block text-sm font-semibold text-[#73487A]">Confirmar contraseña</label>
+            <input id="confirmarContrasena" type="password" formControlName="confirmarContrasena" required
+                   placeholder="Repite tu contraseña"
+                   class="w-full rounded-xl bg-[#E3F3F9] px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-[#73487A]">
+          </div>
+
+          <!-- Error message -->
+          <div *ngIf="errorMessage" class="text-sm text-red-600 text-center mt-4">
+            {{ errorMessage }}
+          </div>
+
+          <!-- Submit Button -->
+          <div class="mt-6">
+            <button type="submit" [disabled]="!registerForm.valid"
+                    class="w-full flex justify-center items-center py-3 px-4 rounded-xl bg-[#73487A] text-white font-semibold text-sm transition hover:bg-[#5a3a60] focus:outline-none focus:ring-2 focus:ring-[#73487A] disabled:bg-gray-400 disabled:cursor-not-allowed">
+              Registrarse
+            </button>
+          </div>
+        </form>
+
+
+        <!-- Link to login -->
+        <div class="mt-6 text-center text-sm text-black">
+          ¿Ya tienes cuenta?
+          <a href="/login" class="font-semibold text-[#2400C5] hover:text-[#1a0091] transition">Inicia sesión aquí</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

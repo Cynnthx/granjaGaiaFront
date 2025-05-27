@@ -1,0 +1,88 @@
+<div class="min-h-screen" style="background-color: #938EBA;">
+  <!-- Header -->
+  <header style="background-color: #73487A;" class="shadow-sm">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href='/home' class="text-white hover:text-gray-200 font-medium">Home</a>
+      <img src="/logo-removebg-preview.png" alt="Logo Granja Gaia" class="mx-auto mb-6 h-24 w-auto">
+      <nav class="flex space-x-6">
+        <a href='/login' class="text-white hover:text-gray-200 font-medium">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Sección de presentación -->
+  <section style="background-color: #73487A;" class="text-white py-1">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6" style="color: #B7A3DE;">
+        🌱 Conoce más sobre Granja Gaia 🍃
+      </h2>
+      <p class="max-w-3xl mx-auto text-lg">Descubre nuestra ubicación y actividades especiales</p>
+    </div>
+
+  </section>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Tarjeta de ubicación con mapa - Centrada con márgenes iguales -->
+    <div class="flex justify-center">
+      <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-center">
+        <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col justify-center mx-4"> <!-- mx-4 para márgenes laterales -->
+          <h3 class="text-2xl font-bold text-[#73487A] mb-4">Nuestra Ubicación</h3>
+          <p class="text-gray-700 mb-4">
+            Ubicada a solo 3 km de la Duna de Bolonia en Cádiz, Granja Gaia es una granja escuela ideal para visitas escolares,
+            actividades familiares y campamentos de verano. Con más de 3.000 m² de huertos ecológicos.
+          </p>
+        </div>
+        <div class="flex justify-center h-full mx-4"> <!-- mx-4 para márgenes laterales -->
+          <div class="bg-white rounded-lg shadow-md overflow-hidden w-full max-w-md h-64 flex items-center">
+            <iframe class="h-full w-full" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d16607.37841179442!2d-5.7716!3d36.0915!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0c60e65973c52d%3A0xcbe7c3a3825108d9!2sDuna%20de%20Bolonia!5e1!3m2!1ses!2ses!4v1745347022755!5m2!1ses!2ses" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de campamentos con imagen - Centrada con márgenes iguales -->
+    <div class="flex justify-center">
+      <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-center">
+        <div class="flex justify-center h-full order-1 md:order-2 mx-4"> <!-- mx-4 para márgenes laterales -->
+          <div class="bg-white rounded-lg shadow-md overflow-hidden w-full max-w-md h-64 flex items-center">
+            <img src="/playa.jpg"
+                 alt="Campamentos de verano en la playa"
+                 class="w-full h-full object-cover hover:opacity-90 transition-opacity">
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col justify-center order-2 md:order-1 mx-4"> <!-- mx-4 para márgenes laterales -->
+          <h3 class="text-2xl font-bold text-[#73487A] mb-4">Campamentos de Verano</h3>
+          <p class="text-gray-700">
+            Disfruta de nuestros campamentos en la playa de Bolonia, donde los niños aprenden sobre naturaleza
+            con la impresionante duna como telón de fondo. Actividades educativas y diversión garantizada.
+            <br><br>
+            ¡Una aventura única en Granja Gaia! 🌾🐴🌊
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de contacto - Centrada con márgenes iguales -->
+    <div class="flex justify-center">
+      <div class="max-w-md bg-white rounded-lg shadow-md p-6 text-center mx-4"> <!-- mx-4 para márgenes laterales -->
+        <h3 class="text-xl font-bold text-[#73487A] mb-2">Contacta con nosotros</h3>
+        <p class="text-gray-700 mb-4">Estamos aquí para responder tus preguntas</p>
+        <a href="tel:+34612345678" class="text-2xl font-medium text-[#73487A] hover:text-[#5a3a60]">
+          📞 +34 612 345 678
+        </a>
+        <p class="mt-3 text-sm text-gray-600">
+          Carretera de Bolonia, km 3.5<br>
+          11391 Cádiz, España
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background-color: #73487A;" class="text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2023 Granja Escuela Gaia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</div>

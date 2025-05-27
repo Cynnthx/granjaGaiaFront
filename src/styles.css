@@ -1,2 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Mooli&display=swap');
+
 @import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  font-family: 'Mooli', sans-serif;
+  background-color: #938EBA;
+}
+
+.custom-snackbar {
+  background-color: #F9F4E3 !important;
+  color: #E3F3F9 !important;
+}

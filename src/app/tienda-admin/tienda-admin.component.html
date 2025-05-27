@@ -1,0 +1,239 @@
+<div class="min-h-screen" style="background-color: #938EBA;">
+  <!-- Header -->
+  <header style="background-color: #73487A;" class="shadow-sm">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-white">Granja Gaia - Panel de Administración</h1>
+      <nav class="flex space-x-6">
+        <a href="/tienda" class="text-white hover:text-gray-200 font-medium">Ver Tienda</a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="background-color: #B7A3DE;" class="text-white py-1">
+    <div class="container mx-auto px-4 text-center">
+      <img src="/logo-removebg-preview.png" alt="Logo Granja Gaia" class="mx-auto mb-6 h-24 w-auto">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6" style="color: #FFFFFF;">
+        🏪🍎 Panel de Administración 🥕🍋
+      </h2>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="min-h-screen bg-white rounded-lg shadow-md py-8 px-4">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-purple-900 font-sans">
+          Gestión de Productos
+        </h1>
+        <button (click)="nuevoProducto()"
+                class="px-4 py-2 rounded-md font-medium text-white bg-green-600 hover:bg-green-700 transition duration-300">
+          + Nuevo Producto
+        </button>
+      </div>
+
+      <!-- Mensajes de éxito/error -->
+      <div *ngIf="error" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        {{ error }}
+      </div>
+      <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+        {{ successMessage }}
+      </div>
+
+      <!-- Formulario de producto -->
+      <div *ngIf="mostrarFormulario" class="mb-8 p-6 rounded-lg shadow-md bg-indigo-50">
+        <h2 class="text-2xl font-bold text-purple-900 mb-4">
+          {{ modoEdicion ? 'Editar Producto' : 'Nuevo Producto' }}
+        </h2>
+
+        <form (ngSubmit)="guardarProducto()">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Columna 1 -->
+            <div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-purple-900 mb-1">Nombre</label>
+                <input type="text" [(ngModel)]="productoActual.nombre" name="nombre"
+                       class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+              </div>
+
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-purple-900 mb-1">Descripción</label>
+                <textarea [(ngModel)]="productoActual.descripcion" name="descripcion" rows="3"
+                          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"></textarea>
+              </div>
+
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-purple-900 mb-1">Categoría</label>
+                <select [(ngModel)]="productoActual.idCategoria" name="categoria"
+                        class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+                  <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Columna 2 -->
+            <div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-purple-900 mb-1">Precio</label>
+                <input type="number" [(ngModel)]="productoActual.precio" name="precio" min="0" step="0.01"
+                       class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+              </div>
+
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-purple-900 mb-1">Stock</label>
+                <input type="number" [(ngModel)]="productoActual.stock" name="stock" min="0"
+                       class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+              </div>
+
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-purple-900 mb-1">URL de la imagen</label>
+                <input type="text" [(ngModel)]="productoActual.imagenUrl" name="imagenUrl"
+                       class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600">
+              </div>
+
+              <div class="mb-4 flex items-center">
+                <input type="checkbox" [(ngModel)]="productoActual.esPopular" name="esPopular" id="esPopular"
+                       class="mr-2 h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                <label for="esPopular" class="text-sm font-medium text-purple-900">Producto popular</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end space-x-4 mt-6">
+            <button type="button" (click)="cancelarEdicion()"
+                    class="px-4 py-2 rounded-md font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-300">
+              Cancelar
+            </button>
+            <button type="submit" [disabled]="loading"
+                    class="px-4 py-2 rounded-md font-medium text-white bg-purple-900 hover:bg-purple-700 transition duration-300">
+              {{ loading ? 'Guardando...' : (modoEdicion ? 'Actualizar' : 'Guardar') }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Listado de Productos -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+          <thead class="bg-purple-900 text-white">
+          <tr>
+            <th class="py-3 px-4 text-left">Imagen</th>
+            <th class="py-3 px-4 text-left">Nombre</th>
+            <th class="py-3 px-4 text-left">Categoría</th>
+            <th class="py-3 px-4 text-left">Precio</th>
+            <th class="py-3 px-4 text-left">Stock</th>
+            <th class="py-3 px-4 text-left">Popular</th>
+            <th class="py-3 px-4 text-left">Acciones</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let producto of productos" class="hover:bg-gray-50">
+            <td class="py-4 px-4">
+              <img [src]="producto.imagenUrl" alt="{{ producto.nombre }}" class="h-16 w-16 object-cover rounded">
+            </td>
+            <td class="py-4 px-4 font-medium text-purple-900">{{ producto.nombre }}</td>
+            <td class="py-4 px-4">{{ producto.nombreCategoria }}</td>
+            <td class="py-4 px-4">{{ producto.precio | number:'1.2-2'}} € </td>
+            <td class="py-4 px-4">{{ producto.stock }}</td>
+            <td class="py-4 px-4">
+              <span *ngIf="producto.esPopular" class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Sí</span>
+              <span *ngIf="!producto.esPopular" class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">No</span>
+            </td>
+            <td class="py-4 px-4">
+              <div class="flex space-x-2">
+                <button (click)="editarProducto(producto)"
+                        class="p-2 text-blue-600 hover:text-blue-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                </button>
+                <button (click)="eliminarProducto(producto.id)"
+                        class="p-2 text-red-600 hover:text-red-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div *ngIf="productos.length === 0 && !loading" class="text-center py-12 text-gray-500">
+        No hay productos registrados
+      </div>
+
+      <div *ngIf="loading" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-900"></div>
+        <p class="mt-2 text-purple-900">Cargando productos...</p>
+      </div>
+    </div>
+
+    <div class="min-h-screen bg-white rounded-lg shadow-md py-8 px-4 mt-10">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-purple-900 font-sans">
+          Gestión de Pedidos
+        </h1>
+      </div>
+
+      <!-- Mensajes de éxito/error -->
+      <div *ngIf="errorPedido" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        {{ errorPedido }}
+      </div>
+      <div *ngIf="successMessagePedido" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+        {{ successMessagePedido }}
+      </div>
+
+
+      <!-- Listado de Pedidos -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+          <thead class="bg-purple-900 text-white">
+          <tr>
+            <th class="py-3 px-4 text-left">Fecha</th>
+            <th class="py-3 px-4 text-left">Estado</th>
+            <th class="py-3 px-4 text-left">Total</th>
+            <th class="py-3 px-4 text-left">Cliente</th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let pedido of pedidos" class="hover:bg-gray-50">
+            <td class="py-4 px-4">
+              {{ pedido.fecha | date: 'dd/MM/yyyy HH:mm' }}
+            </td>
+            <td class="py-4 px-4">
+              <select [(ngModel)]="pedido.estado" (change)="cambiarEstadoPedido(pedido)"
+                      class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+              </select>
+            </td>
+            <td class="py-4 px-4 font-medium text-purple-900">{{ pedido.total | number:'1.2-2' }} € </td>
+            <td class="py-4 px-4">{{ pedido.nombreUsuario }}</td>
+
+
+
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div *ngIf="pedidos.length === 0 && !loadingPedido" class="text-center py-12 text-gray-500">
+        No hay pedidos registrados
+      </div>
+
+      <div *ngIf="loadingPedido" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-900"></div>
+        <p class="mt-2 text-purple-900">Cargando pedidos...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background-color: #73487A;" class="text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2023 Granja Escuela Gaia. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</div>

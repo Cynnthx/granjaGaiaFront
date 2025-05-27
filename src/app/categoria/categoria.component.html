@@ -1,0 +1,32 @@
+<div class="p-4 rounded-lg shadow-md bg-white">
+  <h2 class="text-xl font-bold text-purple-900 mb-4">Lista de Categorías</h2>
+
+  <!-- Filtro de búsqueda -->
+  <input
+    type="text"
+    placeholder="Filtrar categorías..."
+    [(ngModel)]="filtro"
+    (ngModelChange)="filtrarCategorias()"
+    class="px-4 py-2 mb-4 border rounded-md w-full" />
+
+  <!-- Cargando datos -->
+  <p *ngIf="loading" class="text-gray-500">Cargando categorías...</p>
+
+  <!-- Mostrar categorías -->
+  <ul *ngIf="!loading">
+    <li *ngFor="let categoria of categoriasFiltradas" class="flex justify-between items-center mb-2 border-b pb-2">
+      <div class="flex flex-col">
+        <span class="font-bold text-lg text-gray-800">{{ categoria.nombre }}</span>
+        <span class="text-gray-600">{{ categoria.descripcion }}</span>
+      </div>
+      <button
+        (click)="eliminarCategoria(categoria.id)"
+        class="px-4 py-1 bg-red-600 text-white rounded-md hover:bg-red-500 transition duration-300">
+        Eliminar
+      </button>
+    </li>
+  </ul>
+
+  <!-- Mensaje cuando no hay categorías -->
+  <p *ngIf="!loading && categorias.length === 0" class="text-gray-500">No hay categorías disponibles.</p>
+</div>
