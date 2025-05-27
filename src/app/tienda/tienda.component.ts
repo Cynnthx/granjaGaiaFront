@@ -106,6 +106,7 @@ export class TiendaComponent implements OnInit {
   agregarAlCarrito(producto: ProductoDTO): void {
     const idcliente = localStorage.getItem('clienteId');
     if (idcliente === null) {
+
       alert(' Por favor, inicia sesión o crea un nuevo pedido.');
       return;
     }
@@ -140,18 +141,16 @@ export class TiendaComponent implements OnInit {
 
     localStorage.setItem('productosComprar', JSON.stringify(productosComprar));
 
-      // Tu lógica actual para agregar al carrito
-      alert('¡Producto añadido al carrito!');
+    //Muestra el modal de confirmación
+      this.mostrarModal = true;
 
-    // this.carritoService.agregarDetalle(detallePedido).subscribe({
-    //   next: () => {
-    //     alert(`${producto.nombre} añadido al carrito`);
-    //   },
-    //   error: (err) => {
-    //     console.error('Error al agregar al carrito', err);
-    //     alert('Error al agregar al carrito');
-    //   }
-    // });
+  }
+
+  mostrarModal: boolean = false;
+
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
   }
 
 }
