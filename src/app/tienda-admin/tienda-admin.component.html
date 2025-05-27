@@ -132,7 +132,7 @@
             </td>
             <td class="py-4 px-4 font-medium text-purple-900">{{ producto.nombre }}</td>
             <td class="py-4 px-4">{{ producto.nombreCategoria }}</td>
-            <td class="py-4 px-4">{{ producto.precio | currency }}</td>
+            <td class="py-4 px-4">{{ producto.precio | number:'1.2-2'}} € </td>
             <td class="py-4 px-4">{{ producto.stock }}</td>
             <td class="py-4 px-4">
               <span *ngIf="producto.esPopular" class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Sí</span>
@@ -208,7 +208,7 @@
                 <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
               </select>
             </td>
-            <td class="py-4 px-4 font-medium text-purple-900">{{ pedido.total  }} € </td>
+            <td class="py-4 px-4 font-medium text-purple-900">{{ pedido.total | number:'1.2-2' }} € </td>
             <td class="py-4 px-4">{{ pedido.nombreUsuario }}</td>
 
 
