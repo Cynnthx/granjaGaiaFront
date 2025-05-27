@@ -19,6 +19,7 @@ export class ClienteComponent implements OnInit {
   pedidos: PedidoDTO[] = [];
   estados = ['pagado', 'enviado', 'completado'];
 
+
   loading = false;
   error: string | null = null;
   editMode = false;
@@ -82,6 +83,8 @@ export class ClienteComponent implements OnInit {
 
     return false;
   }
+
+
 
 
   cargarPerfil(): void {
