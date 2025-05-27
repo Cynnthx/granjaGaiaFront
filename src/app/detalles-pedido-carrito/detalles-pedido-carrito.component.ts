@@ -230,7 +230,10 @@ export class DetallesPedidoCarritoComponent implements OnInit {
         }
         await lastValueFrom(this.pedidoService.actualizarEstadoPedido(pedido.id, 'pagado'));
         console.log('Procesando pago con:', this.metodoPagoSeleccionado);
-        alert('Pago procesado con éxito!');
+
+        //Muestra el modal de confirmación
+        this.mostrarModal = true;
+
         this.vaciarCarrito();
         this.resetearProcesoPago();
         this.toggleModal();
@@ -245,6 +248,14 @@ export class DetallesPedidoCarritoComponent implements OnInit {
     this.tarjetaForm.reset();
     this.paypalForm.reset();
     this.transferenciaForm.reset();
+  }
+
+
+  mostrarModal: boolean = false;
+
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
   }
 
 
